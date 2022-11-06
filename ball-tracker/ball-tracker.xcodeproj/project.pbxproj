@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0572A1E1F9E07A3F27571AF8 /* Pods_ball_tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4764E985EB82871E0C5DFFCA /* Pods_ball_tracker.framework */; };
-		CA1C62EB28E34B8300A16FE9 /* yolov5s.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CA1C62EA28E34B8300A16FE9 /* yolov5s.mlmodel */; };
+		CA58F04B29146D5E009A103A /* yolov5s.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CA58F04A29146D5E009A103A /* yolov5s.mlmodel */; };
+		CA58F04F29156E55009A103A /* yolov5s-original-ane.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CA58F04E29156E54009A103A /* yolov5s-original-ane.mlmodel */; };
 		CA6BF28928899C180065BE68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6BF28828899C180065BE68 /* AppDelegate.swift */; };
 		CA6BF28B28899C180065BE68 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6BF28A28899C180065BE68 /* SceneDelegate.swift */; };
 		CA6BF28D28899C180065BE68 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6BF28C28899C180065BE68 /* ViewController.swift */; };
@@ -20,7 +21,8 @@
 /* Begin PBXFileReference section */
 		4764E985EB82871E0C5DFFCA /* Pods_ball_tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ball_tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481AEBEB295131A696A4BA0D /* Pods-ball-tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ball-tracker.release.xcconfig"; path = "Target Support Files/Pods-ball-tracker/Pods-ball-tracker.release.xcconfig"; sourceTree = "<group>"; };
-		CA1C62EA28E34B8300A16FE9 /* yolov5s.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = yolov5s.mlmodel; path = ../../../Downloads/yolov5s.mlmodel; sourceTree = "<group>"; };
+		CA58F04A29146D5E009A103A /* yolov5s.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = yolov5s.mlmodel; path = ../../../../Downloads/yolov5s.mlmodel; sourceTree = "<group>"; };
+		CA58F04E29156E54009A103A /* yolov5s-original-ane.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = "yolov5s-original-ane.mlmodel"; path = "../../../../Downloads/yolov5s-original-ane.mlmodel"; sourceTree = "<group>"; };
 		CA6BF28528899C180065BE68 /* ball-tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ball-tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA6BF28828899C180065BE68 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CA6BF28A28899C180065BE68 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,7 +84,8 @@
 		CA6BF28728899C180065BE68 /* ball-tracker */ = {
 			isa = PBXGroup;
 			children = (
-				CA1C62EA28E34B8300A16FE9 /* yolov5s.mlmodel */,
+				CA58F04A29146D5E009A103A /* yolov5s.mlmodel */,
+				CA58F04E29156E54009A103A /* yolov5s-original-ane.mlmodel */,
 				CA6BF28828899C180065BE68 /* AppDelegate.swift */,
 				CA6BF28A28899C180065BE68 /* SceneDelegate.swift */,
 				CA6BF28C28899C180065BE68 /* ViewController.swift */,
@@ -191,10 +194,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA1C62EB28E34B8300A16FE9 /* yolov5s.mlmodel in Sources */,
 				CA6BF28D28899C180065BE68 /* ViewController.swift in Sources */,
+				CA58F04F29156E55009A103A /* yolov5s-original-ane.mlmodel in Sources */,
 				CA6BF28928899C180065BE68 /* AppDelegate.swift in Sources */,
 				CA6BF28B28899C180065BE68 /* SceneDelegate.swift in Sources */,
+				CA58F04B29146D5E009A103A /* yolov5s.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
