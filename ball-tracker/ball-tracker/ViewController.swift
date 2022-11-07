@@ -245,50 +245,93 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 //Resizing image so that model works properly
                 let renderer = UIGraphicsImageRenderer(size: CGSize(width: 640, height: 640))
                 let testImage = renderer.image{(context) in
-                    uiImage.draw(in: CGRect(origin: .zero, size: CGSize(width: 640, height: 640)))
+                    maskImage.draw(in: CGRect(origin: .zero, size: CGSize(width: 640, height: 640)))
                 }
                 DispatchQueue.main.async { [weak self] in
                     guard let welf = self else { return }
-                    welf.imageView.image = uiImage
+                    welf.imageView.image = maskImage
 
                 }
-                self.classify(image: testImage)
+                
+                
+                
+                ///Only uncommenting to see performace without classifyer running
+            
+//                self.classify(image: testImage)
 
+                
+                
+                
             }
         
         }
     
     func drawOnImage(_ image: UIImage) -> UIImage? {
          
-         // Create a context of the starting image size and set it as the current one
-         UIGraphicsBeginImageContext(image.size)
+        // Create a context of the starting image size and set it as the current one
+        UIGraphicsBeginImageContext(image.size)
          
-         // Draw the starting image in the current context as background
-         image.draw(at: CGPoint.zero)
+        // Draw the starting image in the current context as background
+        image.draw(at: CGPoint.zero)
 
-         // Get the current context
-         let context = UIGraphicsGetCurrentContext()!
+        // Get the current context
+        let context = UIGraphicsGetCurrentContext()!
+//        context.setFillColor(red: 0, green: 1, blue: 0, alpha: 1)
 
-         // Draw a red line
-         context.setLineWidth(2.0)
-         context.setStrokeColor(UIColor.red.cgColor)
-         context.move(to: CGPoint(x: 100, y: 100))
-         context.addLine(to: CGPoint(x: 200, y: 200))
-         context.strokePath()
+        // Draw a red line
+        //penta = np.array([[245,345],[1055,345],[1220,435],[85,435]], np.int32)
+        let x1 = 245 * 3
+        let x2 = 1055 * 3
+        let x3 = 1220 * 3
+        let x4 = 85 * 3
+        let y1 = 345 * 3
+        let y2 = 435 * 3
+        
+        context.setLineWidth(20)
+        context.setStrokeColor(UIColor.black.cgColor)
+        context.beginPath()
+        context.move(to: CGPoint(x: 0, y: 0))
+        context.addLine(to: CGPoint(x: image.size.width, y: 0))
+        context.addLine(to: CGPoint(x: image.size.width, y: image.size.height))
+        context.addLine(to: CGPoint(x: 0, y: image.size.height))
+        context.move(to: CGPoint(x: x1, y: y1))
+        context.addLine(to: CGPoint(x: x2, y: y1))
+        context.addLine(to: CGPoint(x: x3, y: y2))
+        context.addLine(to: CGPoint(x: x4, y: y2))
+        context.addLine(to: CGPoint(x: x1, y: y1))
+        context.closePath()
+        context.setFillColor(UIColor.black.cgColor)
+        
+        context.fillPath(using: .evenOdd)
+        context.strokePath()
+        
+//        context.beginPath()
+//        context.move(to: CGPoint(x: 0, y: 0))
+//        context.addLine(to: CGPoint(x: image.size.width, y: 0))
+//        context.addLine(to: CGPoint(x: image.size.width, y: image.size.height))
+//        context.addLine(to: CGPoint(x: 0, y: image.size.height))
+//        context.closePath()
+//        context.setFillColor(UIColor.red.cgColor)
+//        context.fillPath(using: .evenOdd)
+
+        context.strokePath()
+//        context.fillPath()
+        
          
-         // Draw a transparent green Circle
-         context.setStrokeColor(UIColor.green.cgColor)
-         context.setAlpha(0.5)
-         context.setLineWidth(10.0)
-         context.addEllipse(in: CGRect(x: 100, y: 100, width: 100, height: 100))
-         context.drawPath(using: .stroke) // or .fillStroke if need filling
+        // Draw a transparent green Circle
+//         context.setStrokeColor(UIColor.green.cgColor)
+//         context.setAlpha(0.5)
+//         context.setLineWidth(10.0)
+//         context.addEllipse(in: CGRect(x: 100, y: 100, width: 100, height: 100))
+//        context.drawPath(using: .fillStroke) // or .fillStroke if need filling
          
          // Save the context as a new UIImage
-         let myImage = UIGraphicsGetImageFromCurrentImageContext()
-         UIGraphicsEndImageContext()
+        let myImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
          
-         // Return modified image
-         return myImage
+        // Return modified image
+        return myImage
     }
     
     lazy var classificationRequest: VNCoreMLRequest = {
