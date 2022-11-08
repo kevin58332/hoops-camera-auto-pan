@@ -15,17 +15,32 @@ import Photos
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     let captureSession = AVCaptureSession()
-//    let scrollView = UIScrollView()
     let imageView = UIImageView()
     var previewLayer: AVCaptureVideoPreviewLayer
-    var resButtonState = false
     private let videoOutput = AVCaptureVideoDataOutput()
     let boundingBox = UIView()
+    var originalImage: UIImage?
     
-    let model: yolov5s_original_ane = {
+    let movingAverageSize = 100
+    
+    var movingAverage: [Int] = []
+    
+    ////Two different models
+    
+//    let model: yolov5s_original_ane = {
+//    do {
+//        let config = MLModelConfiguration()
+//        return try yolov5s_original_ane(configuration: config)
+//    } catch {
+//        print(error)
+//        fatalError("Couldn't create yolov5s")
+//    }
+//    }()
+    
+    let model: yolov5s = {
     do {
         let config = MLModelConfiguration()
-        return try yolov5s_original_ane(configuration: config)
+        return try yolov5s(configuration: config)
     } catch {
         print(error)
         fatalError("Couldn't create yolov5s")
@@ -38,58 +53,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         DispatchQueue.global(qos: .background).async { self.captureSession.startRunning() }
     }
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        let orientation: UIDeviceOrientation = UIDevice.current.orientation
-//        previewLayer.connection?.videoOrientation = {
-//            switch orientation {
-//            case .landscapeRight:
-//                return .landscapeLeft
-//            case .landscapeLeft:
-//                return .landscapeRight
-//            default:
-//                return .landscapeRight
-//            }
-//        }()
-//
-//
-//    }
-
-
-    override func viewWillLayoutSubviews() {
-        
-        
-//        let rect = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: view.bounds)
-//
-//        view.bounds = rect
-        
-//        scrollView.frame = self.view.frame
-
-//        previewLayer.frame = self.view.frame
-//        if resButtonState {
-//            self.previewLayer.frame = CGRect(x: 0, y: 0, width: view.bounds.width*2, height: view.bounds.height*2)
-//        }else{
-//            self.previewLayer.frame = CGRect(x: 0, y: 0, width: view.bounds.width*3, height: view.bounds.height*3)
-//
-//        }
-        
-        
-        
-//        scrollView.contentSize = CGSize(width: self.previewLayer.frame.width, height: self.previewLayer.frame.height)
-//        scrollView.isScrollEnabled = false
-//        scrollView.setContentOffset(CGPoint(x: self.previewLayer.frame.midX - self.view.frame.width/2, y: self.previewLayer.frame.midY - self.view.frame.height/2), animated: true)
-        
-        
-    }
-    
     private func updatePreviewLayer(layer: AVCaptureConnection, orientation: AVCaptureVideoOrientation) {
         layer.videoOrientation = orientation
         let rect = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: view.bounds)
-//            view.bounds = rect
-        
-        //// uncomment if using previewlayer
-//        self.previewLayer.frame = rect
         self.imageView.frame = rect
+        self.previewLayer.frame = rect
     }
 
     override func viewDidLayoutSubviews() {
@@ -115,16 +83,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        self.view.addSubview(scrollView)
-//        let rect = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: view.bounds)
-//        view.bounds = rect
-//        self.previewLayer.frame=self.view.layer.bounds
-        
-        // Setting up camera on 4k wide angle with landscape orientation
-//        let value = UIInterfaceOrientation.landscapeRight.rawValue
-//        UIDevice.current.setValue(value, forKey: "orientation")
-        
         captureSession.sessionPreset = AVCaptureSession.Preset.hd4K3840x2160
         guard let captureDevice = AVCaptureDevice.default(.builtInUltraWideCamera,
                                                           for: AVMediaType.video, position: .back) else { return }
@@ -132,77 +90,41 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         guard let input = try? AVCaptureDeviceInput(device: captureDevice) else { return }
         
         captureSession.addInput(input)
-          
-        //// uncomment if using previewlayer
-//        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//        previewLayer.frame = view.frame
-//        previewLayer.videoGravity = .resizeAspectFill
-//        view.layer.addSublayer(previewLayer)
 
-        
-        
-        
-        
-        
-//        scrollView.layer.addSublayer(previewLayer)
-        //Starting video
         viewIsLive()
 
-        
-        
-        //setting up button to change resolution
-//        let resButton = UIButton(type: .custom)
-//        resButton.frame = CGRect(x: UIScreen.main.bounds.maxX - 100, y: 75, width: 50, height: 50)
-//        resButton.setTitle("Res", for: .normal)
-//        resButton.backgroundColor = UIColor.blue
-//        resButton.setTitleColor(UIColor.white, for: .normal)
-//        resButton.addTarget(self, action: #selector(resButtonPressed),
-//                            for: .touchDown)
-//        self.view.addSubview(resButton)
-        
-       
-        
-//        imageView.frame = CGRect(x: UIScreen.main.bounds.maxX - 100, y: 75, width: 50, height: 50)
         imageView.frame = view.frame
-//        imageView.frame = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: view.bounds)
         self.view.addSubview(imageView)
+        
+        
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.frame = view.frame
+        previewLayer.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(previewLayer)
+        previewLayer.isHidden = true
         
 
         boundingBox.layer.borderWidth = 4
         boundingBox.backgroundColor = .clear
         boundingBox.layer.borderColor = UIColor.blue.cgColor
-//        scrollView.addSubview(boundingBox)
-    }
-    
-    
-//    func moveLeft(boxX: CGFloat){
-//        if(boxX - self.view.frame.width/2 > 0){
-//            scrollView.setContentOffset(CGPoint(x: boxX - self.view.frame.width/2, y: self.previewLayer.frame.midY - self.view.frame.height/2), animated: true)
-//        }
-//    }
-    
-
-    
-//    func moveRight(boxX:CGFloat){
-//        //self.previewlayer.frame.width if black bars aren't on the sides
-//        if(boxX + self.view.frame.width/2 < self.previewLayer.frame.maxX){
-//            scrollView.setContentOffset(CGPoint(x: boxX - self.view.frame.width/2, y: self.previewLayer.frame.midY - self.view.frame.height/2), animated: true)
-//        }
-//    }
-    
-    @objc func resButtonPressed() {
-        resButtonState.toggle()
-        viewWillLayoutSubviews()
         
+        let viewTypeButton = UIButton()
+        viewTypeButton.frame = CGRect(x: 100, y: 100, width: 50, height: 50)
+        viewTypeButton.backgroundColor = UIColor.blue
+        viewTypeButton.addTarget(self, action: #selector(buttonPressed),
+                                    for: .touchDown)
+        self.view.addSubview(viewTypeButton)
     }
-
+    
+    @objc func buttonPressed() {
+        self.previewLayer.isHidden.toggle()
+        self.imageView.isHidden.toggle()
+    }
 
     required init?(coder aDecoder: NSCoder) {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         super.init(coder: aDecoder)
     }
-
-
 
     private func addVideoOutput() {
         self.videoOutput.videoSettings =
@@ -224,44 +146,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
                 let uiImage = UIImage(cgImage: cgImage)
                 
+                //save original image to be able to crop it later before the image gets masked to be fed into the model
+                originalImage = uiImage
                 
-//                let layer = CAShapeLayer()
-//                let path = UIBezierPath()
-//                path.move(to: CGPoint(x: 40, y: 40))
-//                path.addLine(to: CGPoint(x: 150, y: 40))
-//                path.addLine(to: CGPoint(x: 200, y: 100))
-//                path.addLine(to: CGPoint(x: 20, y: 100))
-//                path.close()
-//                layer.path = path.cgPath
-//                layer.fillColor = UIColor.red.cgColor
-//                layer.backgroundColor = UIColor.blue.cgColor
-//
-//                layer.contents = uiImage.cgImage
-//                self.imageView.layer.mask = layer
                 guard let maskImage = drawOnImage(uiImage) else { return }
            
-                
-                
                 //Resizing image so that model works properly
                 let renderer = UIGraphicsImageRenderer(size: CGSize(width: 640, height: 640))
                 let testImage = renderer.image{(context) in
                     maskImage.draw(in: CGRect(origin: .zero, size: CGSize(width: 640, height: 640)))
                 }
-                DispatchQueue.main.async { [weak self] in
-                    guard let welf = self else { return }
-                    welf.imageView.image = maskImage
+                            
+                self.classify(image: testImage)
 
-                }
-                
-                
-                
-                ///Only uncommenting to see performace without classifyer running
-            
-//                self.classify(image: testImage)
-
-                
-                
-                
             }
         
         }
@@ -280,6 +177,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         // Draw a red line
         //penta = np.array([[245,345],[1055,345],[1220,435],[85,435]], np.int32)
+        
+        ////Arbitrary polygon points just to test if masking works properly
         let x1 = 245 * 3
         let x2 = 1055 * 3
         let x3 = 1220 * 3
@@ -304,31 +203,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         context.fillPath(using: .evenOdd)
         context.strokePath()
-        
-//        context.beginPath()
-//        context.move(to: CGPoint(x: 0, y: 0))
-//        context.addLine(to: CGPoint(x: image.size.width, y: 0))
-//        context.addLine(to: CGPoint(x: image.size.width, y: image.size.height))
-//        context.addLine(to: CGPoint(x: 0, y: image.size.height))
-//        context.closePath()
-//        context.setFillColor(UIColor.red.cgColor)
-//        context.fillPath(using: .evenOdd)
-
         context.strokePath()
-//        context.fillPath()
-        
-         
-        // Draw a transparent green Circle
-//         context.setStrokeColor(UIColor.green.cgColor)
-//         context.setAlpha(0.5)
-//         context.setLineWidth(10.0)
-//         context.addEllipse(in: CGRect(x: 100, y: 100, width: 100, height: 100))
-//        context.drawPath(using: .fillStroke) // or .fillStroke if need filling
-         
-         // Save the context as a new UIImage
         let myImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
          
         // Return modified image
         return myImage
@@ -365,56 +242,39 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         
             people?.forEach{ it in
                 if let person = it as? VNRecognizedObjectObservation{
-                    totalX = totalX + person.boundingBox.midX
+                    totalX = totalX + (person.boundingBox.midX * (self.originalImage?.size.width ?? 3240))
                 }
             }
             
-//            let avgX = (totalX/numOfPeople)*self.previewLayer.frame.width
-            
-//            if UIScreen.main.bounds.midX > avgX{
-//                let diff = UIScreen.main.bounds.midX - avgX
-//                if(diff > 20){
-//                    self.moveLeft(boxX: avgX)
-//                }
-//            }else{
-//                let diff = avgX - UIScreen.main.bounds.midX
-//                if(diff > 20){
-//                    self.moveRight(boxX: avgX)
-//                }
-//            }
-            
-            
-            
-            
-            
-//            if !(request.results ?? []).isEmpty{
-//                if let result = request.results?.first as? VNRecognizedObjectObservation{
-//                    if result.labels.first?.identifier == "person" {
-//
-//                        let rect = CGRect(x: (result.boundingBox.minX * self.previewLayer.frame.width) + self.previewLayer.frame.minX, y: self.previewLayer.frame.maxY - (result.boundingBox.minY * self.previewLayer.frame.height) - (result.boundingBox.height*self.previewLayer.frame.height), width: result.boundingBox.width * self.previewLayer.frame.width, height: result.boundingBox.height * self.previewLayer.frame.height)
-//
-//
-//                        if UIScreen.main.bounds.midX > rect.midX{
-//                            let diff = UIScreen.main.bounds.midX - rect.midX
-//                            if(diff > 50){
-//                                self.moveLeft(boxX: rect.midX)
-////                                print("left")
-////                                print(self.previewLayer.frame.minX)
-//                            }
-//                        }else{
-//                            let diff = rect.midX - UIScreen.main.bounds.midX
-//                            if(diff > 50){
-//                                self.moveRight(boxX: rect.midX)
-////                                print("right")
-////                                print(self.previewLayer.frame.minX)
-//                            }
-//                        }
-//
-//                        self.boundingBox.frame = rect
-//
-//                    }
-//                }
-//            }
+            if numOfPeople > 0 {
+                
+                print(Int(totalX))
+                
+                let avg = totalX/numOfPeople
+                
+                self.movingAverage.insert(Int(avg), at: 0)
+                if self.movingAverage.count > self.movingAverageSize {
+                    _ = self.movingAverage.popLast()
+                }
+                
+                let mASum = self.movingAverage.reduce(0, +)
+                
+                let xmid = mASum / self.movingAverage.count
+                                
+                let cropRect = CGRect(x: xmid - 540, y: 720, width: 1080, height: 720)
+                
+                let croppedCGImage = self.originalImage?.cgImage?.cropping(to: cropRect)
+                
+                guard let croppedCGImage = croppedCGImage, let originalImage = self.originalImage else { return }
+                
+                let croppedImage = UIImage(
+                    cgImage: croppedCGImage,
+                    scale: originalImage.imageRendererFormat.scale,
+                    orientation: originalImage.imageOrientation
+                )
+                
+                self.imageView.image = croppedImage
+            }
         }
     }
     
