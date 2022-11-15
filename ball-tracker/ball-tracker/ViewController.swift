@@ -20,6 +20,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     private let videoOutput = AVCaptureVideoDataOutput()
     let boundingBox = UIView()
     var originalImage: UIImage?
+    let picutreView = UIView()
+    let videoView = UIView()
+    
+    var topLeftDot: UIView? = nil
+    var topRightDot: UIView? = nil
+    var bottomLeftDot: UIView? = nil
+    var bottomRightDot: UIView? = nil
+    var looper = 0
+    
+    var x1: CGFloat = 0
+    var x2: CGFloat = 0
+    var x3: CGFloat = 0
+    var x4: CGFloat = 0
+    var y1: CGFloat = 0
+    var y2: CGFloat = 0
+    var y3: CGFloat = 0
+    var y4: CGFloat = 0
     
     let movingAverageSize = 100
     
@@ -57,7 +74,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         layer.videoOrientation = orientation
         let rect = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: view.bounds)
         self.imageView.frame = rect
-        self.previewLayer.frame = rect
+//        self.previewLayer.frame = rect
+//        self.view.frame = rect
+//        self.picutreView.frame = rect
+        self.videoView.frame = rect
+        let rect2 = AVMakeRect(aspectRatio: CGSize(width: 16, height: 9), insideRect: self.videoView.bounds)
+        self.previewLayer.frame = rect2
     }
 
     override func viewDidLayoutSubviews() {
@@ -89,19 +111,28 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         guard let input = try? AVCaptureDeviceInput(device: captureDevice) else { return }
         
+        view.addSubview(videoView)
+        view.addSubview(picutreView)
+        
         captureSession.addInput(input)
 
         viewIsLive()
 
         imageView.frame = view.frame
-        self.view.addSubview(imageView)
+//        self.view.addSubview(imageView)
+        self.picutreView.addSubview(imageView)
+//        self.picutreView.frame = view.frame
+        
         
         
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame = view.frame
         previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
-        previewLayer.isHidden = true
+//        view.layer.addSublayer(previewLayer)
+//        previewLayer.isHidden = true
+        self.videoView.isHidden = true
+        self.videoView.layer.addSublayer(previewLayer)
+//        self.videoView.frame = view.frame
         
 
         boundingBox.layer.borderWidth = 4
@@ -114,11 +145,94 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         viewTypeButton.addTarget(self, action: #selector(buttonPressed),
                                     for: .touchDown)
         self.view.addSubview(viewTypeButton)
+//        self.videoView.addSubview(viewTypeButton)
+//        self.picutreView.addSubview(viewTypeButton)
+        
+        
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        videoView.isUserInteractionEnabled = true
+        videoView.addGestureRecognizer(tapGR)
+        
     }
     
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        let loc:CGPoint = sender.location(in: sender.view)
+        switch self.looper{
+        case 0:
+            looper += 1
+            guard let topLeftDot = topLeftDot else {
+                let dot = UIView(frame: CGRect(x: loc.x, y: loc.y, width: 10, height: 10))
+                dot.backgroundColor = .blue
+                self.topLeftDot = dot
+                self.videoView.addSubview(dot) //add dot as subview to your main view
+                return
+            }
+            topLeftDot.frame.origin.x = loc.x
+            topLeftDot.frame.origin.y = loc.y
+        case 1:
+            looper += 1
+            guard let topRightDot = topRightDot else {
+                let dot = UIView(frame: CGRect(x: loc.x, y: loc.y, width: 10, height: 10))
+                dot.backgroundColor = .green
+                self.topRightDot = dot
+                self.videoView.addSubview(dot) //add dot as subview to your main view
+                return
+            }
+            topRightDot.frame.origin.x = loc.x
+            topRightDot.frame.origin.y = loc.y
+        case 2:
+            looper += 1
+            guard let bottomRightDot = bottomRightDot else {
+                let dot = UIView(frame: CGRect(x: loc.x, y: loc.y, width: 10, height: 10))
+                dot.backgroundColor = .red
+                self.bottomRightDot = dot
+                self.videoView.addSubview(dot) //add dot as subview to your main view
+                return
+            }
+            bottomRightDot.frame.origin.x = loc.x
+            bottomRightDot.frame.origin.y = loc.y
+        case 3:
+            self.looper = 0
+            guard let bottomLeftDot = bottomLeftDot else {
+                let dot = UIView(frame: CGRect(x: loc.x, y: loc.y, width: 10, height: 10))
+                dot.backgroundColor = .orange
+                self.bottomLeftDot = dot
+                self.videoView.addSubview(dot) //add dot as subview to your main view
+                calculateVals()
+                return
+            }
+            bottomLeftDot.frame.origin.x = loc.x
+            bottomLeftDot.frame.origin.y = loc.y
+            calculateVals()
+        default:
+            self.looper = 0
+        }
+        
+        
+    }
+    
+    func calculateVals() {
+        
+        guard let topLeftDot = topLeftDot, let topRightDot = topRightDot,
+                let bottomLeftDot = bottomLeftDot, let bottomRightDot = bottomRightDot else{ return }
+        let multFactor: CGFloat = 2160/videoView.frame.height
+        
+        x1 = topLeftDot.frame.origin.x * multFactor
+        y1 = topLeftDot.frame.origin.y * multFactor
+        x2 = topRightDot.frame.origin.x * multFactor
+        y2 = topRightDot.frame.origin.y * multFactor
+        x3 = bottomRightDot.frame.origin.x * multFactor
+        y3 = bottomRightDot.frame.origin.y * multFactor
+        x4 = bottomLeftDot.frame.origin.x * multFactor
+        y4 = bottomLeftDot.frame.origin.y * multFactor
+    }
+    
+    
+    
     @objc func buttonPressed() {
-        self.previewLayer.isHidden.toggle()
-        self.imageView.isHidden.toggle()
+//        self.previewLayer.isHidden.toggle()
+        self.videoView.isHidden.toggle()
+        self.picutreView.isHidden.toggle()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -140,6 +254,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 debugPrint("unable to get image from sample buffer")
                 return
             }
+        guard self.looper == 0, let _ = bottomLeftDot else { return }
             let ciimage = CIImage(cvImageBuffer: frame)
             let context = CIContext()
             if let cgImage = context.createCGImage(ciimage, from: ciimage.extent) {
@@ -179,12 +294,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         //penta = np.array([[245,345],[1055,345],[1220,435],[85,435]], np.int32)
         
         ////Arbitrary polygon points just to test if masking works properly
-        let x1 = 245 * 3
-        let x2 = 1055 * 3
-        let x3 = 1220 * 3
-        let x4 = 85 * 3
-        let y1 = 345 * 3
-        let y2 = 435 * 3
+//        let x1 = 245 * 3
+//        let x2 = 1055 * 3
+//        let x3 = 1220 * 3
+//        let x4 = 85 * 3
+//        let y1 = 345 * 3
+//        let y2 = 435 * 3
         
         context.setLineWidth(20)
         context.setStrokeColor(UIColor.black.cgColor)
@@ -194,9 +309,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         context.addLine(to: CGPoint(x: image.size.width, y: image.size.height))
         context.addLine(to: CGPoint(x: 0, y: image.size.height))
         context.move(to: CGPoint(x: x1, y: y1))
-        context.addLine(to: CGPoint(x: x2, y: y1))
-        context.addLine(to: CGPoint(x: x3, y: y2))
-        context.addLine(to: CGPoint(x: x4, y: y2))
+        context.addLine(to: CGPoint(x: x2, y: y2))
+        context.addLine(to: CGPoint(x: x3, y: y3))
+        context.addLine(to: CGPoint(x: x4, y: y4))
         context.addLine(to: CGPoint(x: x1, y: y1))
         context.closePath()
         context.setFillColor(UIColor.black.cgColor)
