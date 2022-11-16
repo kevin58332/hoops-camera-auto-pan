@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4E9AA2B4-FF4D-456E-9DDE-E8ACC66C4F1A"
+            uuid = "237D96ED-7D3B-46E4-902B-B772601D3D9D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ball-tracker/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "handleTap(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -23,32 +23,143 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C792C982-F039-4C5D-AE52-D5A726A74523"
+            uuid = "3F7D173B-B23F-4925-8DAE-6FFB42A7A8C3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ball-tracker/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
-            landmarkName = "captureOutput(_:didOutput:from:)"
+            startingLineNumber = "384"
+            endingLineNumber = "384"
+            landmarkName = "runModelOnImage(image:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B3465B07-B379-4B82-B5BB-AE6CBFD1604F"
+            uuid = "E1AA5B8E-CF5D-47AA-B3F6-8A2A2114BBCF"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ball-tracker/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
-            landmarkName = "captureOutput(_:didOutput:from:)"
+            startingLineNumber = "539"
+            endingLineNumber = "539"
+            landmarkName = "processObservations(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A7AFA5F7-780D-4C02-B7B0-7C1ED41297BA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ball-tracker/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "509"
+            endingLineNumber = "509"
+            landmarkName = "processObservations(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "712F8E14-FBB3-446A-BD63-4748D9D8C95D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ball-tracker/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "531"
+            endingLineNumber = "531"
+            landmarkName = "processObservations(for:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "712F8E14-FBB3-446A-BD63-4748D9D8C95D - a6e1c33a98373f9f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in ball_tracker.ViewController.processObservations(for: __C.VNRequest) -&gt; ()"
+                  moduleName = "ball-tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kevinaguilar/Github/hoops-camera-auto-pan/ball-tracker/ball-tracker/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "516"
+                  endingLineNumber = "516"
+                  offsetFromSymbolStart = "2256">
+               </Location>
+               <Location
+                  uuid = "712F8E14-FBB3-446A-BD63-4748D9D8C95D - a6e1c33a98373f9f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in ball_tracker.ViewController.processObservations(for: __C.VNRequest) -&gt; ()"
+                  moduleName = "ball-tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kevinaguilar/Github/hoops-camera-auto-pan/ball-tracker/ball-tracker/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "516"
+                  endingLineNumber = "516"
+                  offsetFromSymbolStart = "2284">
+               </Location>
+               <Location
+                  uuid = "712F8E14-FBB3-446A-BD63-4748D9D8C95D - a6e1c33a98373f9f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in ball_tracker.ViewController.processObservations(for: __C.VNRequest) -&gt; ()"
+                  moduleName = "ball-tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kevinaguilar/Github/hoops-camera-auto-pan/ball-tracker/ball-tracker/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "516"
+                  endingLineNumber = "516"
+                  offsetFromSymbolStart = "2356">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4F0DDBFB-416C-4A41-B175-EDF80E12E589"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ball-tracker/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "556"
+            endingLineNumber = "556"
+            landmarkName = "processObservations(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FDB61B33-EF43-44F7-8279-0802F7720F2A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ball-tracker/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "542"
+            endingLineNumber = "542"
+            landmarkName = "processObservations(for:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
